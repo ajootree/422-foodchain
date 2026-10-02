@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173d38">
+  <meta name="description" content="같은 먹이 카드를 합치고 생물 손님에게 알맞은 먹이를 서빙하는 4학년 과학 게임.">
+  <title>먹이사슬 식당</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23173d38'/%3E%3Ccircle cx='16' cy='17' r='10' fill='%23ffc44a'/%3E%3Ccircle cx='16' cy='17' r='6' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="diner">
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">🍽️</span><div><span class="eyebrow">🌿 숲속 머지 키친</span><h1>먹이사슬 식당</h1></div></div>
+    <div class="wallet"><span>🪙 가게 수입</span><strong id="coins">0<span>원</span></strong></div>
+    <div class="toolbar"><button id="guideButton" class="icon-button" title="먹이사슬 도감">📖<span>도감</span></button><button id="pauseButton" class="icon-button" title="잠깐 쉬기">Ⅱ<span>쉬기</span></button><button id="soundButton" class="icon-button" title="소리 켜기">♪<span>소리 끔</span></button></div>
+  </header>
+    <aside class="side-area">
+      <section class="progress-card"><span class="eyebrow">다음 먹이사슬</span><h2 id="nextTitle">토끼풀 식당까지</h2><div class="progress-track"><i id="progressFill"></i></div><p id="progressText">8접시를 서빙하면 열려요</p><div class="unlock-dots" id="unlockDots"></div></section>
+      <section class="decor-card"><h2>꿈의 숲속 식당</h2><div id="decorSteps" class="decor-steps"></div><button id="decorateButton" class="decor-button"><span id="decorName">나무 간판 달기</span><strong id="decorCost">150원</strong></button><p id="goalText">먹이사슬 1/6 · 꾸미기 0/3</p></section>
+      <div class="business-actions"><button id="finishBusiness" class="finish-business">영업 마치기</button><button id="viewRecords" class="records-button">📒 지난 기록</button></div><div class="tip"><span>💡</span><p>바로 서빙할까, 더 합칠까?<br>손님이 먹는 생물을 생각해 보세요.</p></div>
+    </aside>
+  <div class="game-layout"><div class="restaurant-decor" aria-hidden="true"><span class="decor-sign">🌿 숲속 식당 🌿</span><span class="decor-flowers">🌷 🌼 🌳 🌼 🌷</span><span class="decor-lights">✦ · ✦ · ✦ · ✦ · ✦</span></div><div class="scene-leaves" aria-hidden="true">🌿</div>
+    <section class="play-area">
+      <div class="section-heading storefront-heading"><h2 id="restaurantTitle">배고픈 손님들</h2><span id="servedLabel" class="counter">서빙 0접시</span></div>
+      <div class="customers" id="customers" aria-label="손님에게 먹이 서빙하기"></div>
+      <div class="countertop"></div>
+      <span id="selectionHint" class="visually-hidden" aria-live="polite"></span>
+      <div id="board" class="board" aria-label="먹이 카드 합치기"></div>
+      <div class="kitchen-bottom"><button id="fountainButton" class="fountain"><span class="fountain-icon">🌱</span><span><strong>생태계 먹이 보충</strong><small id="supplyLabel">누르면 빈칸이 한 번에 채워져요</small></span><span class="supply-plus">＋</span></button><button id="returnButton" class="return-bin" aria-label="선택한 카드 무료 반환"><span>♻️</span><strong>돌려놓기</strong><small>무료 반환</small></button></div>
+    </section>
+
+  </div>
+  <footer><span>먹히는 생물 <b>→</b> 먹는 생물</span><button id="restartButton">새로 시작</button></footer>
+</main>
+<div class="modal-backdrop" id="modal" hidden><section class="modal-card" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></section></div>
+<svg id="tutorialShade" class="tutorial-shade" hidden aria-hidden="true"><defs><mask id="tutorialMask"><rect width="100%" height="100%" fill="white"/><g id="tutorialHoles"></g></mask></defs><rect width="100%" height="100%" fill="#10241d" fill-opacity=".78" mask="url(#tutorialMask)"/></svg>
+<aside id="tutorial" class="tutorial-coach" hidden aria-live="polite"><span class="coach-face" aria-hidden="true">🧑‍🍳</span><div><strong id="tutorialStep">연습 1 / 4</strong><p id="tutorialText"></p></div><button id="skipTutorial">건너뛰기</button></aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="drag-ghost" id="dragGhost" hidden></div>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -5,6 +5,7 @@
  let restaurantName='숲속 식당',recordId=Date.now()+'-'+Math.random().toString(36).slice(2);
  const customerSeats=new Map(),happyCustomers=new Map(),seenFeatures=new Set();
  const $=id=>document.getElementById(id);
+ document.querySelector('.diner').append($('tutorial'));
  const chainBy=id=>CHAINS.find(c=>c.id===id);
  function foodHtml(card){const x=cardInfo(card);return `<span class="chain-mark" style="background:${x.chain.color}"></span><span class="tier" aria-hidden="true">${'•'.repeat(x.tier+1)}</span><span class="food-icon" aria-hidden="true">${x.icon}</span><span class="food-name">${x.label}</span>`;}
  function diagram(chain){return `<div class="chain-diagram">${chain.names.map((name,i)=>`${i?'<span class="chain-arrow" aria-label="먹히고">→</span>':''}<div class="chain-node"><span class="discovery-level">${i+1}</span><span aria-hidden="true">${chain.icons[i]}</span><strong>${name}</strong></div>`).join('')}</div>`;}
@@ -70,7 +71,25 @@
   requestAnimationFrame(updateTutorialShade);
 
  }
+ function updateNoticeAnchors(){
+  if(innerWidth<=650)return;
+  const sidebar=document.querySelector('.side-area').getBoundingClientRect();
+  const root=document.documentElement;
+  root.style.setProperty('--notice-left',sidebar.left+'px');
+  root.style.setProperty('--notice-width',sidebar.width+'px');
+  root.style.setProperty('--notice-top',Math.max(12,sidebar.top)+'px');
+  const coachHeight=$('tutorial').offsetHeight;
+  let coachTop=Math.max(12,sidebar.top);
+  for(const target of document.querySelectorAll('.tutorial-target')){
+   const r=target.getBoundingClientRect();
+   if(r.left>=sidebar.right||r.right<=sidebar.left||r.top>=coachTop+coachHeight||r.bottom<=coachTop)continue;
+   const above=r.top-coachHeight-12,below=r.bottom+12;
+   coachTop=above>=12?above:below+coachHeight<=innerHeight-12?below:12;
+  }
+  root.style.setProperty('--coach-top',coachTop+'px');
+ }
  function updateTutorialShade(){
+  updateNoticeAnchors();
   if(tutorial<0&&!featureTip)return;
   $('tutorialHoles').innerHTML=[...document.querySelectorAll('.tutorial-target')].map(el=>{const r=el.getBoundingClientRect();return `<rect x="${r.x-5}" y="${r.y-5}" width="${r.width+10}" height="${r.height+10}" rx="16" fill="black"/>`;}).join('');
  }
@@ -78,8 +97,7 @@
  function renderFeatureTip(){
   document.querySelectorAll('.tutorial-target').forEach(el=>el.classList.remove('tutorial-target'));
   $('tutorial').hidden=false;$('tutorialShade').removeAttribute('hidden');
-  const targets=[...document.querySelectorAll(featureTip.selector)],el=targets[0];targets.forEach(target=>target.classList.add('tutorial-target'));
-  $('tutorial').style.top=featureTip.selector.includes('data-customer')?Math.min((el?.getBoundingClientRect().bottom||150)+12,innerHeight-160)+'px':'';
+  const targets=[...document.querySelectorAll(featureTip.selector)];targets.forEach(target=>target.classList.add('tutorial-target'));
   $('tutorialStep').textContent=featureTip.title;$('tutorialText').textContent=featureTip.text;$('skipTutorial').textContent='알겠어요!';
   requestAnimationFrame(updateTutorialShade);
  }
@@ -111,7 +129,7 @@
  document.addEventListener('click',e=>{if((tutorial>=0||featureTip)&&!e.target.closest('.tutorial-target,#skipTutorial')){e.preventDefault();e.stopImmediatePropagation();}},true);
 
  $('skipTutorial').onclick=()=>{if(featureTip)closeFeatureTip();else finishTutorial();};
- function notify(message,error=false){$('toast').textContent=message;$('toast').className=`toast show ${error?'error':''}`;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600);}
+ function notify(message,error=false){updateNoticeAnchors();$('toast').textContent=message;$('toast').className=`toast show ${error?'error':''}`;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600);}
  function play(kind){
   if(!soundOn)return;
   try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume();const notes=kind==='wrong'?[190,140]:kind==='merge'?[430,640]:kind==='unlock'?[523,659,784,1046]:[660,880];notes.forEach((f,i)=>{const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime+i*.09;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+.16);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+.17);});}catch{}

@@ -193,3 +193,21 @@ body:has(.diner[data-decor="3"]){background-image:url("data:image/svg+xml,%3Csvg
 .modal-card:has(#startButton) .primary:disabled{background:#c8c5bd;border-bottom-color:#a5a39d;color:#f7f7f3;opacity:1}
 .modal-card:has(#startButton) .tutorial-start-skip:disabled{color:#aaa59c;opacity:1;cursor:default}
 @media(max-height:650px){.modal-card:has(#startButton) .name-block{padding:8px 12px;margin:8px 0}.modal-card:has(#startButton) .name-block .name-label{font-size:17px;margin-bottom:6px}.modal-card:has(#startButton) .name-block .restaurant-name-input{padding:8px 12px}.modal-card:has(#startButton) .chain-diagram{margin:8px 0}.modal-card:has(#startButton){padding-top:12px;padding-bottom:12px}}
+/* Keep help and status messages outside the customer row. */
+.toast{transition:opacity .2s,transform .2s}
+@media(min-width:651px){
+ .tutorial-coach{left:var(--notice-left,16px);top:var(--coach-top,204px);width:var(--notice-width,192px);transform:none;display:grid;grid-template-columns:1fr;gap:8px;padding:12px;max-height:calc(100dvh - var(--coach-top,204px) - 12px)}
+ .tutorial-coach .coach-face{font-size:29px}
+ .tutorial-coach p{font-size:16px;overflow-wrap:anywhere}
+ .tutorial-coach button{justify-self:end;margin:0}
+ body:not(:has(#modal:not([hidden]))) .toast{left:var(--notice-left,16px);top:12px;bottom:auto;width:var(--notice-width,192px);max-width:var(--notice-width,192px);max-height:calc(var(--notice-top,204px) - 24px);transform:translateY(-10px);padding:10px 12px;line-height:1.5;overflow-wrap:anywhere}
+ body:not(:has(#modal:not([hidden]))) .toast.show{transform:translateY(0)}
+}
+@media(max-width:650px){
+ .tutorial-coach{position:relative;order:1;top:auto;bottom:auto;left:auto;transform:none;width:100%;max-height:none;overflow:visible;margin:0 0 12px}
+ .game-layout{order:2}
+ .side-area{order:3}
+ .diner>footer{order:4}
+ body:not(:has(#modal:not([hidden]))) .toast{left:50%;top:auto;bottom:max(18px,env(safe-area-inset-bottom));width:auto;max-width:calc(100vw - 28px);max-height:40dvh;transform:translate(-50%,10px)}
+ body:not(:has(#modal:not([hidden]))) .toast.show{transform:translate(-50%,0)}
+}
